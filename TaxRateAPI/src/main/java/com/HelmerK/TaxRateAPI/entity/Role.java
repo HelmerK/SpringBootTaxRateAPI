@@ -32,13 +32,16 @@ import jakarta.xml.bind.annotation.XmlTransient;
 public class Role implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@Basic(optional = false)
 	@Column(name = "role_id")
 	private Integer roleId;
+
 	@Basic(optional = false)
 	@Column(name = "role_name")
 	private String roleName;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId", fetch = FetchType.EAGER)
 	private List<User> userList;
 
