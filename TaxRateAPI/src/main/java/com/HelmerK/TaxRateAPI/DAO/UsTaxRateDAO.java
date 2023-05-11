@@ -2,115 +2,102 @@ package com.HelmerK.TaxRateAPI.DAO;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import com.HelmerK.TaxRateAPI.entity.Location;
 import com.HelmerK.TaxRateAPI.entity.UsTaxRate;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceContext;
 
 public class UsTaxRateDAO {
 
+	@PersistenceContext
 	private EntityManager em;
-	
-	public UsTaxRateDAO(EntityManager em) {
-		this.em = em;
+
+	public UsTaxRateDAO() {
+
 	}
-	
-	 public UsTaxRate getUs(String locationCode) {
 
-//	        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+	public List<UsTaxRate> getAllUs() {
 
-	        try {
-	            Query queryCanLocCode = (Query) em.createNamedQuery("Location.findByLocationCode");
-	            queryCanLocCode.setParameter("locationCode", locationCode);
-	            Location Loc = (Location) queryCanLocCode.getSingleResult();
+		try {
 
-	            UsTaxRate usTaxRate = Loc.getUsTaxRateList().get(0);
+			Session sesh = em.unwrap(Session.class);
 
-	            return usTaxRate;
+			Query<UsTaxRate> query = (Query) em.createQuery("from UsTaxRate", UsTaxRate.class);
 
-	        } finally {
-//	            em.close();
-	        }
-	    }
+			List<UsTaxRate> taxRates = query.getResultList();
 
-	    public List<UsTaxRate> getAllUs() {
+			return taxRates;
 
-//	        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		} catch (Exception e) {
 
-	        try {
+			return null;
 
-	            List<UsTaxRate> taxRates = em.createNamedQuery("UsTaxRate.findAll", UsTaxRate.class).getResultList();
-	            return taxRates;
+		}
+	}
 
-	        } finally {
-//	            em.close();
-	        }
-	    }
+	public UsTaxRate getUs(String locationCode) {
 
-	    public void insertUs(UsTaxRate usTaxRate) {
+		try {
 
-//	        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-	        EntityTransaction tran = em.getTransaction();
+			Session sesh = em.unwrap(Session.class);
 
-	        try {
+			Query<UsTaxRate> query = (Query) em.createQuery("from UsTaxRate", UsTaxRate.class);
 
-	            LocationDAO locDB = new LocationDAO(em);
-	            Location loc = locDB.getLoc(usTaxRate.getLocation().getLocationCode());
+			UsTaxRate usTaxRate = query.getSingleResult();
 
-	            tran.begin();
-	            em.merge(loc);
-	            em.persist(usTaxRate);
-	            tran.commit();
+			return usTaxRate;
 
-	        } catch (Exception ex) {
-	            ex.printStackTrace();
-	            tran.rollback();
-	        } finally {
-//	            em.close();
-	        }
-	    }
+		} catch (Exception e) {
 
-	    public void deleteUs(UsTaxRate usTaxRate) {
+			return null;
 
-//	        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-	        EntityTransaction tran = em.getTransaction();
+		}
+	}
 
-	        try {
-	            Location loc = usTaxRate.getLocation();
-	            tran.begin();
-	            loc.getUsTaxRateList().clear();
-	            em.remove(em.merge(usTaxRate));
-	            em.merge(loc);
-	            tran.commit();
+	public void insertUs(UsTaxRate usTaxRate) {
 
-	        } catch (Exception ex) {
-	            ex.printStackTrace();
-	            tran.rollback();
-	        } finally {
-//	            em.close();
-	        }
-	    }
+		try {
+			Session sesh = em.unwrap(Session.class);
 
-	    public void updateUs(UsTaxRate usTaxRate) {
+			sesh.persist(usTaxRate);
 
-//	        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-	        EntityTransaction tran = em.getTransaction();
+		} catch (Exception e) {
+			
+			System.out.println("Bad US INSERT");
+			
+		}
+	}
 
-	        try {
+	public void deleteUs(UsTaxRate usTaxRate) {
 
-	            tran.begin();
-	            em.merge(usTaxRate);
-	            tran.commit();
+		try {
+			Session sesh = em.unwrap(Session.class);
 
-	        } catch (Exception ex) {
-	            ex.printStackTrace();
-	            tran.rollback();
-	        } finally {
-//	            em.close();
-	        }
-	    }
-	
+			sesh.remove(usTaxRate);
+
+		} catch (Exception e) {
+			
+			System.out.println("Bad US DELETE");
+			
+		}
+	}
+
+	public void updateUs(UsTaxRate usTaxRate) {
+
+		try {
+
+			Session sesh = em.unwrap(Session.class);
+
+			sesh.merge(usTaxRate);
+
+		} catch (Exception e) {
+			
+			System.out.println("Bad US UPDATE");
+			
+		}
+	}
+
 }

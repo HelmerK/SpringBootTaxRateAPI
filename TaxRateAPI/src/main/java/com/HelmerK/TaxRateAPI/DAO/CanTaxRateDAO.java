@@ -2,90 +2,95 @@ package com.HelmerK.TaxRateAPI.DAO;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.HelmerK.TaxRateAPI.entity.CanTaxRate;
-import com.HelmerK.TaxRateAPI.entity.Location;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+
+import jakarta.persistence.PersistenceContext;
 
 public class CanTaxRateDAO {
 
+	@PersistenceContext
 	private EntityManager em;
 
-	@Autowired
-	public CanTaxRateDAO(EntityManager em) {
-		this.em = em;
+	public CanTaxRateDAO() {
+
 	}
 
 	/**
-     * 
-     * @param locationCode location code string that represents a Canada Postal Code
-     * @return CanadaTaxRate object retrieved using the locationCode.
-     */
-    public CanTaxRate getCan(String locationCode) {
+	 * 
+	 * @return a List of CanadaTaxRate objects.
+	 */
+	public List<CanTaxRate> getAllCan() {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		try {
+			Session sesh = em.unwrap(Session.class);
 
-        try {
-            Query queryCanLocCode = (Query) em.createNamedQuery("Location.findByLocationCode");
-            queryCanLocCode.setParameter("locationCode", locationCode);
-            Location Loc = (Location) queryCanLocCode.getSingleResult();
+			Query<CanTaxRate> query = (Query) em.createQuery("from CanTaxRate", CanTaxRate.class);
 
-            CanTaxRate canTaxRate = Loc.getCanadaTaxRateList().get(0);
-            return canTaxRate;
-        }finally {
-//            em.close();
-        }
+			List<CanTaxRate> rates = query.getResultList();
 
-        
-    }
+			return rates;
+
+		} catch (Exception e) {
+
+			System.out.println("Bad CANTAX GETALL");
+
+			return null;
+
+		}
+	}
 
 	/**
-     * 
-     * @return a List of CanadaTaxRate objects.
-     */
-    public List<CanTaxRate> getAllCan() {
+	 * 
+	 * @param locationCode location code string that represents a Canada Postal Code
+	 * @return CanadaTaxRate object retrieved using the locationCode.
+	 */
+	public CanTaxRate getCan(String locationCode) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+		try {
+			Session sesh = em.unwrap(Session.class);
 
-        try{
+			Query<CanTaxRate> query = (Query) em.createQuery("from CanTaxRate", CanTaxRate.class);
 
-            List<CanTaxRate> taxRates = em.createNamedQuery("CanadaTaxRate.findAll", CanTaxRate.class).getResultList();
-            return taxRates;
-        }finally {
-//            em.close();
-        }
-        
-    }
+			CanTaxRate rate = query.getSingleResult();
+
+			return rate;
+
+		} catch (Exception e) {
+
+			System.out.println("Bad CANTAX GET");
+
+			return null;
+		}
+
+	}
 
 	/**
 	 * 
 	 * @param canTaxRate A CanadaTaxRate object that will be inserted into the DB.
 	 */
-	public void insertCan(CanTaxRate canTaxRate) {
-
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		EntityTransaction tran = em.getTransaction();
+	public CanTaxRate insertCan(CanTaxRate canTaxRate) {
 
 		try {
 
-			LocationDAO locDB = new LocationDAO(em);
-			Location loc = locDB.getLoc(canTaxRate.getLocation().getLocationCode());
+			Session sesh = em.unwrap(Session.class);
 
-			tran.begin();
-			em.merge(loc);
-			em.persist(canTaxRate);
-			tran.commit();
+			sesh.persist(canTaxRate);
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			tran.rollback();
-		}finally {
-//            em.close();
-        }
+			return canTaxRate;
+
+		} catch (Exception e) {
+
+			System.out.println("Bad CANTAX INSERT");
+
+			return null;
+
+		}
+
 	}
 
 	/**
@@ -94,23 +99,18 @@ public class CanTaxRateDAO {
 	 */
 	public void deleteCan(CanTaxRate canTaxRate) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		EntityTransaction tran = em.getTransaction();
-
 		try {
-			Location loc = canTaxRate.getLocation();
-			tran.begin();
-			loc.getCanadaTaxRateList().clear();
-			em.remove(em.merge(canTaxRate));
-			em.merge(loc);
-			tran.commit();
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			tran.rollback();
-		}finally {
-//            em.close();
-        }
+			Session sesh = em.unwrap(Session.class);
+
+			sesh.remove(canTaxRate);
+
+		} catch (Exception e) {
+
+			System.out.println("Bad CANTAX DELETE");
+
+		}
+
 	}
 
 	/**
@@ -120,21 +120,18 @@ public class CanTaxRateDAO {
 	 */
 	public void updateCan(CanTaxRate canTaxRate) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		EntityTransaction tran = em.getTransaction();
-
 		try {
 
-			tran.begin();
-			em.merge(canTaxRate);
-			tran.commit();
+			Session sesh = em.unwrap(Session.class);
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			tran.rollback();
-		}finally {
-//            em.close();
-        }
+			sesh.merge(canTaxRate);
+
+		} catch (Exception e) {
+
+			System.out.println("Bad CANTAX UPDATE");
+
+		}
+
 	}
 
 }

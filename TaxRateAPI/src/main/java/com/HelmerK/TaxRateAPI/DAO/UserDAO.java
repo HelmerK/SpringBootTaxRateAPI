@@ -13,14 +13,16 @@ import com.HelmerK.TaxRateAPI.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
 
 public class UserDAO {
-
+	
+	@PersistenceContext
 	private EntityManager em;
 
-	@Autowired
-	public UserDAO(EntityManager em) {
-		this.em = em;
+	
+	public UserDAO() {
+		
 	}
 	
 	/**
@@ -35,17 +37,21 @@ public class UserDAO {
 	public User getUser(String username) {
 
 		try {
-			Query<?> userQuery = (Query<?>) em.createNamedQuery("User.findByUsername");
-			userQuery.setParameter("username", username);
-			User user = (User) userQuery.getSingleResult();
+			Session sesh = em.unwrap(Session.class);
+			
+			Query<User> query = sesh.createQuery("from User", User.class);
+			
+			User user = (User) query.getSingleResult();
+			
 			return user;
 
 		} catch (NoResultException e) {
+			
 			System.out.println("User not found");
+			
 			return null;
-		}finally {
-//            em.close();
-        }
+			
+		}
 
 	}
 	/**
@@ -54,10 +60,11 @@ public class UserDAO {
      * @return A list of all User objects stored in the database.
      * @throws Exception If any exception occurs during the database operation.
      */
-	@Transactional
+	@Transactional()
 	public List<User> getAll() {
 
 		try {
+			
 		Session sesh = em.unwrap(Session.class);
 
 		Query<User> query = sesh.createQuery("from User", User.class);
@@ -67,96 +74,12 @@ public class UserDAO {
 		return roles;
 		
 		}catch(Exception e) {
+			
 			return null;
-		}finally {
-//            em.close();
-        }
+			
+		}
 	}
 
-	
-	/**
-     * Inserts a new User object into the database.
-     *
-     * @param user The User object to be inserted.
-     * @throws Exception If any exception occurs during the database operation.
-     */
-	@Transactional
-    public void insert(User user) throws Exception {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        EntityTransaction tran = em.getTransaction();
-
-        try {
-
-            Role role = user.getRoleId();
-            role.getUserList().add(user);
-
-            tran.begin();
-            em.persist(user);
-            em.merge(role);
-            tran.commit();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            tran.rollback();
-        }finally {
-//            em.close();
-        }
-    }
-
-    /**
-     * Deletes the given User object from the database.
-     *
-     * @param user The User object to be deleted.
-     * @throws Exception If any exception occurs during the database operation.
-     */
-	@Transactional
-    public void delete(User user) throws Exception {
-
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        EntityTransaction tran = em.getTransaction();
-
-        try {
-
-            Role role = user.getRoleId();
-            role.getUserList().remove(user);
-
-            tran.begin();
-            em.remove(em.merge(user));
-            em.merge(role);
-            tran.commit();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            tran.rollback();
-        }finally {
-//            em.close();
-        }
-    }
-
-    /**
-     * Updates the given User object in the database.
-     *
-     * @param user The User object containing the updated information.
-     * @throws Exception If any exception occurs during the database operation.
-     */
-	@Transactional
-    public void update(User user) throws Exception {
-
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        EntityTransaction tran = em.getTransaction();
-
-        try {
-
-            tran.begin();
-            em.merge(user);
-            tran.commit();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            tran.rollback();
-        } finally {
-//            em.close();
-        }
-    }
+   
 }

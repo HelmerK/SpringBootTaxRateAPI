@@ -4,49 +4,60 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.HelmerK.TaxRateAPI.entity.Role;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 public class RoleDAO {
 
+	@PersistenceContext
 	private EntityManager em;
 
-	@Autowired
-	public RoleDAO(EntityManager em) {
-		this.em = em;
+	public RoleDAO() {
+
 	}
 
 	@Transactional
 	public List<Role> getAll() {
 
 		try {
-		Session sesh = em.unwrap(Session.class);
+			Session sesh = em.unwrap(Session.class);
 
-		Query<Role> query = sesh.createQuery("from Role", Role.class);
+			Query<Role> query = sesh.createQuery("from Role", Role.class);
 
-		List<Role> roles = query.getResultList();
+			List<Role> roles = query.getResultList();
 
-//		List<Role> roles = em.createNamedQuery("Role.findAll", Role.class).getResultList();
-		return roles;
-		}catch(Exception e) {
+			return roles;
+			
+		} catch (Exception e) {
+			
+			System.out.println("Bad ROLE GETALL");
+			
 			return null;
-		}finally {
-//            em.close();
-        }
+			
+		}
 	}
 
 	@Transactional
 	public Role getRole(int roleId) {
 		try {
-			Role role = em.find(Role.class, roleId);
+			
+			Session sesh = em.unwrap(Session.class);
+			
+			Query<Role> query = (Query) em.createQuery("from Role", Role.class);
+			
+			Role role = query.getSingleResult();
+			
 			return role;
+			
 		} catch (Exception e) {
+			
+			System.out.println("Bad ROLE GET");
+			
 			return null;
-		} finally {
-//    		em.close();
+			
 		}
 	}
 }

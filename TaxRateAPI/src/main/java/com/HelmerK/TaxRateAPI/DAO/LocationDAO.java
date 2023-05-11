@@ -2,13 +2,15 @@ package com.HelmerK.TaxRateAPI.DAO;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 
 import com.HelmerK.TaxRateAPI.entity.Location;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+
+import jakarta.persistence.PersistenceContext;
 
 /**
  * LocationDB class is used to support CRUD functionality on the location table
@@ -17,11 +19,11 @@ import jakarta.persistence.EntityTransaction;
  */
 public class LocationDAO {
 
+	@PersistenceContext
 	private EntityManager em;
 
-	@Autowired
-	public LocationDAO(EntityManager em) {
-		this.em = em;
+	public LocationDAO() {
+
 	}
 
 	/**
@@ -29,14 +31,22 @@ public class LocationDAO {
 	 * @return A List of all Location objects from the database.
 	 */
 	public List<Location> getAll() {
-//		EntityManager em = DBUtil.getEmFactory().createEntityManager();
 
 		try {
-			List<Location> locations = em.createNamedQuery("Location.findAll", Location.class).getResultList();
+			Session sesh = em.unwrap(Session.class);
+
+			Query<Location> query = (Query) em.createQuery("from Location", Location.class);
+
+			List<Location> locations = query.getResultList();
+			
 			return locations;
 
-		} finally {
-			em.close();
+		} catch (Exception e) {
+			
+			System.out.println("Bad LOCATION GETALL");
+			
+			return null;
+			
 		}
 
 	}
@@ -49,14 +59,23 @@ public class LocationDAO {
 	 */
 	public Location getLoc(String locationCode) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-
 		try {
-			Location loc = em.find(Location.class, locationCode);
+			
+			Session sesh = em.unwrap(Session.class);
+			
+			Query<Location> query = (Query) em.createQuery("from Location", Location.class);
+			
+			Location loc = query.getSingleResult();
+			
 			return loc;
-		} finally {
-//            em.close();
-        }
+			
+		} catch (Exception e) {
+			
+			System.out.println("Bad LOCATION GET");
+			
+			return null;
+			
+		}
 	}
 
 	/**
@@ -66,21 +85,17 @@ public class LocationDAO {
 	 */
 	public void insertLoc(Location loc) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		EntityTransaction trans = em.getTransaction();
-
 		try {
 
-			trans.begin();
-			em.persist(loc);
-			trans.commit();
+			Session sesh = em.unwrap(Session.class);
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			trans.rollback();
-		}finally {
-//            em.close();
-        }
+			sesh.persist(loc);
+
+		} catch (Exception e) {
+			
+			System.out.println("Bad LOCATION INSERT");
+			
+		}
 
 	}
 
@@ -91,20 +106,17 @@ public class LocationDAO {
 	 */
 	public void updateLoc(Location loc) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		EntityTransaction trans = em.getTransaction();
-
 		try {
-			trans.begin();
-			em.merge(em.merge(loc));
-			trans.commit();
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			trans.rollback();
-		}finally {
-//            em.close();
-        }
+			
+			Session sesh = em.unwrap(Session.class);
+			
+			sesh.merge(loc);
+			
+		} catch (Exception e) {
+			
+			System.out.println("Bad LOCATION UPDATE");
+			
+		}
 
 	}
 
@@ -115,21 +127,17 @@ public class LocationDAO {
 	 */
 	public void deleteLoc(Location loc) {
 
-//        EntityManager em = DBUtil.getEmFactory().createEntityManager();
-		EntityTransaction trans = em.getTransaction();
-
 		try {
-			trans.begin();
-			em.remove(em.merge(loc));
-			trans.commit();
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			trans.rollback();
-
-		}finally {
-//            em.close();
-        }
+			
+			Session sesh = em.unwrap(Session.class);
+			
+			sesh.remove(loc);
+			
+		} catch (Exception e) {
+			
+			System.out.println("Bad LOCATION DELETE");
+			
+		}
 
 	}
 
