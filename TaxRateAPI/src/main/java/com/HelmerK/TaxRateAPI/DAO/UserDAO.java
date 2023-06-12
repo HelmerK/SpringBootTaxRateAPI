@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.HelmerK.TaxRateAPI.entity.Role;
@@ -15,15 +16,12 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
+@Repository
 public class UserDAO {
 	
-	@PersistenceContext
+	@Autowired
 	private EntityManager em;
 
-	
-	public UserDAO() {
-		
-	}
 	
 	/**
      * Retrieves the User object associated with the given username.

@@ -4,21 +4,27 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.HelmerK.TaxRateAPI.entity.UsTaxRate;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+@Repository
 public class UsTaxRateDAO {
 
-	@PersistenceContext
+	
 	private EntityManager em;
 
-	public UsTaxRateDAO() {
-
+	@Autowired
+	public UsTaxRateDAO(EntityManager em) {
+		this.em = em;
 	}
 
+	@Transactional
 	public List<UsTaxRate> getAllUs() {
 
 		try {
@@ -38,6 +44,7 @@ public class UsTaxRateDAO {
 		}
 	}
 
+	@Transactional
 	public UsTaxRate getUs(String locationCode) {
 
 		try {
@@ -57,6 +64,7 @@ public class UsTaxRateDAO {
 		}
 	}
 
+	@Transactional
 	public void insertUs(UsTaxRate usTaxRate) {
 
 		try {
@@ -65,12 +73,13 @@ public class UsTaxRateDAO {
 			sesh.persist(usTaxRate);
 
 		} catch (Exception e) {
-			
+
 			System.out.println("Bad US INSERT");
-			
+
 		}
 	}
 
+	@Transactional
 	public void deleteUs(UsTaxRate usTaxRate) {
 
 		try {
@@ -79,12 +88,13 @@ public class UsTaxRateDAO {
 			sesh.remove(usTaxRate);
 
 		} catch (Exception e) {
-			
+
 			System.out.println("Bad US DELETE");
-			
+
 		}
 	}
 
+	@Transactional
 	public void updateUs(UsTaxRate usTaxRate) {
 
 		try {
@@ -94,9 +104,9 @@ public class UsTaxRateDAO {
 			sesh.merge(usTaxRate);
 
 		} catch (Exception e) {
-			
+
 			System.out.println("Bad US UPDATE");
-			
+
 		}
 	}
 

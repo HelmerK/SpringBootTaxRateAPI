@@ -1,9 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.HelmerK.TaxRateAPI.entity;
+
+
 
 import java.io.Serializable;
 
@@ -21,8 +18,9 @@ import jakarta.persistence.Table;
  * @author super
  */
 @Entity
-@Table(name = "ustaxrate")
-public class UsTaxRate implements Serializable {
+@Table(name = "canadataxrate")
+
+public class CanadaTaxRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -30,22 +28,30 @@ public class UsTaxRate implements Serializable {
     @Column(name = "location_Code")
     private String locationCode;
     @Basic(optional = false)
-    @Column(name = "state_tax")
-    private double stateTax;
+    @Column(name = "gst")
+    private double gst;
+    @Basic(optional = false)
+    @Column(name = "pst")
+    private double pst;
+    @Basic(optional = false)
+    @Column(name = "hst")
+    private double hst;
 //    @JoinColumn(name = "location_Code", referencedColumnName = "location_Code", insertable = false, updatable = false)
 //    @OneToOne(optional = false, fetch = FetchType.EAGER)
 //    private Location location;
 
-    public UsTaxRate() {
+    public CanadaTaxRate() {
     }
 
-    public UsTaxRate(String locationCode) {
+    public CanadaTaxRate(String locationCode) {
         this.locationCode = locationCode;
     }
 
-    public UsTaxRate(String locationCode, double stateTax) {
+    public CanadaTaxRate(String locationCode, double gst, double pst, double hst) {
         this.locationCode = locationCode;
-        this.stateTax = stateTax;
+        this.gst = gst;
+        this.pst = pst;
+        this.hst = hst;
     }
 
     public String getLocationCode() {
@@ -56,12 +62,28 @@ public class UsTaxRate implements Serializable {
         this.locationCode = locationCode;
     }
 
-    public double getStateTax() {
-        return stateTax;
+    public double getGst() {
+        return gst;
     }
 
-    public void setStateTax(double stateTax) {
-        this.stateTax = stateTax;
+    public void setGst(double gst) {
+        this.gst = gst;
+    }
+
+    public double getPst() {
+        return pst;
+    }
+
+    public void setPst(double pst) {
+        this.pst = pst;
+    }
+
+    public double getHst() {
+        return hst;
+    }
+
+    public void setHst(double hst) {
+        this.hst = hst;
     }
 
 //    public Location getLocation() {
@@ -82,10 +104,10 @@ public class UsTaxRate implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsTaxRate)) {
+        if (!(object instanceof CanadaTaxRate)) {
             return false;
         }
-        UsTaxRate other = (UsTaxRate) object;
+        CanadaTaxRate other = (CanadaTaxRate) object;
         if ((this.locationCode == null && other.locationCode != null) || (this.locationCode != null && !this.locationCode.equals(other.locationCode))) {
             return false;
         }
@@ -94,7 +116,7 @@ public class UsTaxRate implements Serializable {
 
     @Override
     public String toString() {
-        return "models.Ustaxrate[ locationCode=" + locationCode + " ]";
+        return "models.Canadataxrate[ locationCode=" + locationCode + " ]";
     }
     
 }

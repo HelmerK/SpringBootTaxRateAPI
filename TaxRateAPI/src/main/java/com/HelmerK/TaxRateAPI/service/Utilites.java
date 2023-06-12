@@ -1,9 +1,11 @@
 package com.HelmerK.TaxRateAPI.service;
 
-import java.util.regex.Matcher;
+import java.util.regex.Matcher; 
 import java.util.regex.Pattern;
 
-import com.HelmerK.TaxRateAPI.DAO.LocationDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.HelmerK.TaxRateAPI.DAO.UserDAO;
 import com.HelmerK.TaxRateAPI.entity.User;
 
@@ -11,13 +13,11 @@ import com.HelmerK.TaxRateAPI.entity.User;
  *Purpose of this class is to provide any needed utilities for the API to function. Will include verification for incoming location code and user login.  
  */
 
+@Service
 public class Utilites {
 
+	@Autowired
 	private UserDAO uDAO;
-
-	public Utilites() {
-
-	}
 
 	// User related methods
 	public boolean login(String username, String password) {

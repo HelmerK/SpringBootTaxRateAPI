@@ -1,10 +1,12 @@
 package com.HelmerK.TaxRateAPI.DAO;
 
-import java.util.List;
+import java.util.List; 
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.HelmerK.TaxRateAPI.entity.Location;
 
@@ -17,19 +19,18 @@ import jakarta.persistence.PersistenceContext;
  * in the taxrate database.
  *
  */
+@Repository
 public class LocationDAO {
 
-	@PersistenceContext
+	@Autowired
 	private EntityManager em;
 
-	public LocationDAO() {
-
-	}
 
 	/**
 	 *
 	 * @return A List of all Location objects from the database.
 	 */
+	@Transactional
 	public List<Location> getAll() {
 
 		try {
@@ -57,15 +58,14 @@ public class LocationDAO {
 	 *                     Code
 	 * @return A location object retrieved from the database.
 	 */
+	@Transactional
 	public Location getLoc(String locationCode) {
 
 		try {
 			
 			Session sesh = em.unwrap(Session.class);
 			
-			Query<Location> query = (Query) em.createQuery("from Location", Location.class);
-			
-			Location loc = query.getSingleResult();
+			Location loc = sesh.find(Location.class, locationCode);
 			
 			return loc;
 			
@@ -83,6 +83,7 @@ public class LocationDAO {
 	 * @param loc Location object that will be inserted into the Location table in
 	 *            the taxratedb database
 	 */
+	@Transactional
 	public void insertLoc(Location loc) {
 
 		try {
@@ -104,6 +105,7 @@ public class LocationDAO {
 	 * @param loc Location object that will be updated in the Location table of the
 	 *            taxratedb database.
 	 */
+	@Transactional
 	public void updateLoc(Location loc) {
 
 		try {
@@ -125,6 +127,7 @@ public class LocationDAO {
 	 * @param loc Location object that will be removed from the Location table of
 	 *            the taxratedb database.
 	 */
+	@Transactional
 	public void deleteLoc(Location loc) {
 
 		try {

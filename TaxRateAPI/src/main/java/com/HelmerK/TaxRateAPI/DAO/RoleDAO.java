@@ -4,20 +4,19 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.HelmerK.TaxRateAPI.entity.Role;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+@Repository
 public class RoleDAO {
 
-	@PersistenceContext
+	@Autowired
 	private EntityManager em;
-
-	public RoleDAO() {
-
-	}
 
 	@Transactional
 	public List<Role> getAll() {
