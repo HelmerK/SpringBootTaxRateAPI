@@ -105,13 +105,5 @@ public class Utilites {
 		}
 	}
 	
-	public boolean validCode(String locationCode) {
-		
-		boolean result = false;
-		
-		
-		
-		return result;
-	}
 
 }
