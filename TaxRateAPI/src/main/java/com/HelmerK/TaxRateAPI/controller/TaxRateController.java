@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,28 +36,28 @@ public class TaxRateController {
 	}
 
 	@PostMapping("/canrate")
-	public void postCan(@PathVariable CanadaTaxRate rate) {
+	public void postCan(@RequestBody CanadaTaxRateDTO rateDTO) {
 
-//		canSer.insertCan(rate);
-
-	}
-
-	@PutMapping("/canrate/{id}")
-	public void putCan(@PathVariable CanadaTaxRate rate) {
-
-//		canSer.updateCan(rate);
+		canSer.insertCan(rateDTO);
 
 	}
 
-	@DeleteMapping("/canrate/{id}")
-	public void deleteCan(@PathVariable CanadaTaxRate rate) {
+	@PutMapping("/canrate")
+	public void putCan(@RequestBody CanadaTaxRateDTO rate) {
 
-		canSer.deleteCan(rate);
+		canSer.updateCan(rate);
+
+	}
+
+	@DeleteMapping("/canrate/{locationCode}")
+	public void deleteCan(@PathVariable String locationCode) {
+
+		canSer.deleteCan(locationCode);
 
 	}
 
 	// USA
-	@GetMapping("/usrate/{id}")
+	@GetMapping("/usrate/{locationCode}")
 	public UsTaxRate getUs(@PathVariable String locationCode) {
 
 		return usSer.getUs(locationCode);
@@ -64,23 +65,23 @@ public class TaxRateController {
 	}
 
 	@PostMapping("/usrate")
-	public void postUs(@PathVariable UsTaxRate rate) {
+	public void postUs(@RequestBody UsTaxRate rate) {
 
-//		usSer.insertUs(rate);
+		usSer.insertUs(rate);
 
 	}
 
 	@PutMapping("/usrate/{id}")
-	public void putUs(@PathVariable UsTaxRate rate) {
+	public void putUs(@RequestBody UsTaxRate rate) {
 
-//		usSer.updateUs(rate);
+		usSer.updateUs(rate);
 
 	}
 
-	@DeleteMapping("/usrate/{id}")
-	public void deleteUs(@PathVariable UsTaxRate rate) {
+	@DeleteMapping("/usrate/{locationCode}")
+	public void deleteUs(@PathVariable String locationCode) {
 
-		usSer.deleteUs(rate);
+		usSer.deleteUs(locationCode);
 
 	}
 

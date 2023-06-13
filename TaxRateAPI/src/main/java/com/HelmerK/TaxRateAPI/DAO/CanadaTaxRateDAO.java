@@ -141,5 +141,23 @@ public class CanadaTaxRateDAO {
 		}
 
 	}
+	
+	@Transactional
+	public boolean vaildCode(String locationCode) {
+		boolean result = false;
+		
+		try {
+			Session sesh = em.unwrap(Session.class);
+			
+			CanadaTaxRate rate = sesh.find(CanadaTaxRate.class, locationCode);
+			result = true;
+			return result;
+			
+		}catch(Exception e) {
+			
+			return false;
+		}
+		
+	}
 
 }

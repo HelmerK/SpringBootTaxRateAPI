@@ -36,9 +36,7 @@ public class CanadaTaxRate implements Serializable {
     @Basic(optional = false)
     @Column(name = "hst")
     private double hst;
-//    @JoinColumn(name = "location_Code", referencedColumnName = "location_Code", insertable = false, updatable = false)
-//    @OneToOne(optional = false, fetch = FetchType.EAGER)
-//    private Location location;
+   
 
     public CanadaTaxRate() {
     }
@@ -86,13 +84,6 @@ public class CanadaTaxRate implements Serializable {
         this.hst = hst;
     }
 
-//    public Location getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(Location location) {
-//        this.location = location;
-//    }
 
     @Override
     public int hashCode() {
