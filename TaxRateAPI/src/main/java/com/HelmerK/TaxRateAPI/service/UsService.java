@@ -1,10 +1,11 @@
 package com.HelmerK.TaxRateAPI.service;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.HelmerK.TaxRateAPI.DAO.LocationDAO;
 import com.HelmerK.TaxRateAPI.DAO.UsTaxRateDAO;
+import com.HelmerK.TaxRateAPI.DTO.UsTaxRateDTO;
 import com.HelmerK.TaxRateAPI.entity.Location;
 import com.HelmerK.TaxRateAPI.entity.UsTaxRate;
 
@@ -15,54 +16,60 @@ public class UsService {
 	private UsTaxRateDAO usDAO;
 	@Autowired
 	private LocationDAO locDAO;
+	@Autowired
+	private Utilites util;
+	@Autowired
+	private UsTaxRateDTO usDTO;
+
+	public UsTaxRateDTO getUs(String locationCode) {
+		String cleanCode = util.formatLocationCode(locationCode);
+		boolean valid = usDAO.vaildCode(cleanCode);
+
+		if (valid) {
+		
+			Location loc = locDAO.getLoc(cleanCode);
 	
-	public UsTaxRate getUs(String locationCode) {
+			UsTaxRate rate = usDAO.getUs(cleanCode);
+	
+			usDTO.setLocationCode(rate.getLocationCode());
+			usDTO.setCountry(loc.getCountry());
+			usDTO.setState(loc.getRegion());
+			usDTO.setStateTax(rate.getStateTax());
 
-		UsTaxRate rate = usDAO.getUs(locationCode);
+			return usDTO;
+		} else {
+			return null;
+		}
+	}
 
-		return rate;
+	public void insertUs(UsTaxRateDTO rateDTO) {
+
+		Location newLoc = new Location(rateDTO.getLocationCode(), rateDTO.getCountry(), rateDTO.getState());
+		locDAO.insertLoc(newLoc);
+
+		UsTaxRate newRate = new UsTaxRate(rateDTO.getLocationCode(), rateDTO.getStateTax());
+		usDAO.insertUs(newRate);
 
 	}
 
-//	public void insertUs(UsTaxRate rate) {
-//
-//		Location newLoc = new Location(rate.getLocation().getLocationCode(), rate.getLocation().getCountry(),
-//				rate.getLocation().getRegion());
-//		locDAO.insertLoc(newLoc);
-//
-//		rate.setLocation(newLoc);
-//
-//		newLoc.setUsTaxRate(rate);
-//
-//		locDAO.insertLoc(newLoc);
-//		usDAO.insertUs(rate);
-//
-//	}
+	public void deleteUs(String locationCode) {
 
-	public void deleteUs(UsTaxRate rate) {
+		UsTaxRate deleteRate = usDAO.getUs(locationCode);
+		usDAO.deleteUs(deleteRate);
 
-		usDAO.deleteUs(rate);
+		Location deleteLoc = locDAO.getLoc(locationCode);
+		locDAO.deleteLoc(deleteLoc);
 
 	}
 
-//	public void updateUs(UsTaxRate rate) {
-//
-//		Location loc = locDAO.getLoc(rate.getLocation().getLocationCode());
-//		UsTaxRate updated = usDAO.getUs(rate.getLocation().getLocationCode());
-//
-//		
-//		loc.setCountry(rate.getLocation().getCountry());
-//		loc.setRegion(rate.getLocation().getRegion());
-//		
-//		updated.setStateTax(rate.getStateTax());
-//		
-//		updated.setLocation(loc);
-//		loc.setUsTaxRate(rate);
-//		
-//
-//		locDAO.updateLoc(loc);
-//		usDAO.updateUs(rate);
-//
-//	}
+	public void updateUs(UsTaxRateDTO rateDTO) {
+
+		Location updatedLoc = new Location(rateDTO.getLocationCode(), rateDTO.getCountry(), rateDTO.getState());
+		UsTaxRate updatedRate = new UsTaxRate(rateDTO.getLocationCode(), rateDTO.getStateTax());
+
+		usDAO.updateUs(updatedRate);
+		locDAO.updateLoc(updatedLoc);
+
+	}
 
 }

@@ -10,10 +10,7 @@ import java.io.Serializable;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -32,9 +29,6 @@ public class UsTaxRate implements Serializable {
     @Basic(optional = false)
     @Column(name = "state_tax")
     private double stateTax;
-//    @JoinColumn(name = "location_Code", referencedColumnName = "location_Code", insertable = false, updatable = false)
-//    @OneToOne(optional = false, fetch = FetchType.EAGER)
-//    private Location location;
 
     public UsTaxRate() {
     }
@@ -63,14 +57,6 @@ public class UsTaxRate implements Serializable {
     public void setStateTax(double stateTax) {
         this.stateTax = stateTax;
     }
-
-//    public Location getLocation() {
-//        return location;
-//    }
-//
-//    public void setLocation(Location location) {
-//        this.location = location;
-//    }
 
     @Override
     public int hashCode() {

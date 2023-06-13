@@ -1,6 +1,6 @@
 package com.HelmerK.TaxRateAPI.DAO;
 
-import java.util.List;  
+import java.util.List;
 
 import org.hibernate.Session;
 
@@ -18,7 +18,6 @@ public class CanadaTaxRateDAO {
 	@Autowired
 	private EntityManager em;
 
-
 	/**
 	 * 
 	 * @return a List of CanadaTaxRate objects.
@@ -27,8 +26,7 @@ public class CanadaTaxRateDAO {
 	public List<CanadaTaxRate> getAllCan() {
 
 		try {
-			
-			
+
 			Session sesh = em.unwrap(Session.class);
 
 			Query<CanadaTaxRate> query = sesh.createQuery("from CanadaTaxRate", CanadaTaxRate.class);
@@ -55,19 +53,17 @@ public class CanadaTaxRateDAO {
 	public CanadaTaxRate getCan(String locationCode) {
 
 		try {
-			
-		
-			
+
 			Session sesh = em.unwrap(Session.class);
-			
+
 			CanadaTaxRate rate = sesh.find(CanadaTaxRate.class, locationCode);
-			
-			return rate; 
+
+			return rate;
 
 		} catch (Exception e) {
 
 			System.out.println("Bad CANTAX GET");
-			
+
 			return null;
 		}
 
@@ -141,23 +137,28 @@ public class CanadaTaxRateDAO {
 		}
 
 	}
-	
+
 	@Transactional
 	public boolean vaildCode(String locationCode) {
 		boolean result = false;
-		
+
 		try {
 			Session sesh = em.unwrap(Session.class);
-			
+
 			CanadaTaxRate rate = sesh.find(CanadaTaxRate.class, locationCode);
-			result = true;
-			return result;
-			
-		}catch(Exception e) {
-			
+			if (rate == null) {
+				return result;
+			} else {
+				result = true;
+				return result;
+
+			}
+
+		} catch (Exception e) {
+
 			return false;
 		}
-		
+
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.HelmerK.TaxRateAPI.DTO.CanadaTaxRateDTO;
+import com.HelmerK.TaxRateAPI.DTO.UsTaxRateDTO;
 import com.HelmerK.TaxRateAPI.entity.CanadaTaxRate;
 import com.HelmerK.TaxRateAPI.entity.UsTaxRate;
 import com.HelmerK.TaxRateAPI.service.CanService;
@@ -58,23 +59,23 @@ public class TaxRateController {
 
 	// USA
 	@GetMapping("/usrate/{locationCode}")
-	public UsTaxRate getUs(@PathVariable String locationCode) {
+	public UsTaxRateDTO getUs(@PathVariable String locationCode) {
 
 		return usSer.getUs(locationCode);
 
 	}
 
 	@PostMapping("/usrate")
-	public void postUs(@RequestBody UsTaxRate rate) {
+	public void postUs(@RequestBody UsTaxRateDTO rateDTO) {
 
-		usSer.insertUs(rate);
+		usSer.insertUs(rateDTO);
 
 	}
 
-	@PutMapping("/usrate/{id}")
-	public void putUs(@RequestBody UsTaxRate rate) {
+	@PutMapping("/usrate")
+	public void putUs(@RequestBody UsTaxRateDTO rateDTO) {
 
-		usSer.updateUs(rate);
+		usSer.updateUs(rateDTO);
 
 	}
 

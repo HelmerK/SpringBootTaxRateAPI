@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.HelmerK.TaxRateAPI.entity.CanadaTaxRate;
 import com.HelmerK.TaxRateAPI.entity.UsTaxRate;
 
 import jakarta.persistence.EntityManager;
@@ -16,7 +17,6 @@ import jakarta.persistence.PersistenceContext;
 @Repository
 public class UsTaxRateDAO {
 
-	
 	private EntityManager em;
 
 	@Autowired
@@ -51,14 +51,13 @@ public class UsTaxRateDAO {
 
 			Session sesh = em.unwrap(Session.class);
 
-			Query<UsTaxRate> query = (Query) em.createQuery("from UsTaxRate", UsTaxRate.class);
-
-			UsTaxRate usTaxRate = query.getSingleResult();
-
+			UsTaxRate usTaxRate = sesh.find(UsTaxRate.class, locationCode);
+			System.out.println(usTaxRate.toString());
 			return usTaxRate;
 
 		} catch (Exception e) {
 
+			System.out.println(e.getLocalizedMessage());
 			return null;
 
 		}
@@ -108,6 +107,28 @@ public class UsTaxRateDAO {
 			System.out.println("Bad US UPDATE");
 
 		}
+	}
+
+	@Transactional
+	public boolean vaildCode(String locationCode) {
+		boolean result = false;
+
+		try {
+			Session sesh = em.unwrap(Session.class);
+
+			UsTaxRate rate = sesh.find(UsTaxRate.class, locationCode);
+			if (rate == null) {
+				return result;
+			} else {
+				result = true;
+				return result;
+			}
+
+		} catch (Exception e) {
+
+			return false;
+		}
+
 	}
 
 }
