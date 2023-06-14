@@ -9,6 +9,10 @@ import com.HelmerK.TaxRateAPI.DTO.UsTaxRateDTO;
 import com.HelmerK.TaxRateAPI.entity.Location;
 import com.HelmerK.TaxRateAPI.entity.UsTaxRate;
 
+
+/*
+ * Service class to deal with US tax rates*/
+
 @Service
 public class UsService {
 
